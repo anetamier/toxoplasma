@@ -1,0 +1,116 @@
+import numpy as np
+import math
+
+model_CpG = np.array([[0.180, 0.274, 0.426, 0.120],
+                      [0.171, 0.368, 0.274, 0.188],
+                      [0.161, 0.339, 0.375, 0.125],
+                      [0.079, 0.355, 0.384, 0.182]])
+
+model_non_CpG = np.array([[0.300, 0.205, 0.285, 0.210],
+                          [0.322, 0.298, 0.078, 0.302],
+                          [0.248, 0.246, 0.298, 0.208],
+                          [0.177, 0.239, 0.292, 0.292]])
+
+f = open('15000.txt', 'r')
+dna = list(f.read())
+print(dna)
+locations = []
+cpg_list = []
+
+for a in range(0, 14700):
+    b = a + 300
+
+    n1 = dna[a:b]
+    pplus = 0.25
+    pminus = 0.25
+
+    for i in range(0, 299):
+        if n1[i] == 'A':
+            if n1[i + 1] == 'A':
+                pplus = pplus * model_CpG[0, 0]
+            if n1[i + 1] == 'C':
+                pplus = pplus * model_CpG[0, 1]
+            if n1[i + 1] == 'G':
+                pplus = pplus * model_CpG[0, 2]
+            if n1[i + 1] == 'T':
+                pplus = pplus * model_CpG[0, 3]
+        if n1[i] == 'C':
+            if n1[i + 1] == 'A':
+                pplus = pplus * model_CpG[1, 0]
+            if n1[i + 1] == 'C':
+                pplus = pplus * model_CpG[1, 1]
+            if n1[i + 1] == 'G':
+                pplus = pplus * model_CpG[1, 2]
+            if n1[i + 1] == 'T':
+                pplus = pplus * model_CpG[1, 3]
+        if n1[i] == 'G':
+            if n1[i + 1] == 'A':
+                pplus = pplus * model_CpG[2, 0]
+            if n1[i + 1] == 'C':
+                pplus = pplus * model_CpG[2, 1]
+            if n1[i + 1] == 'G':
+                pplus = pplus * model_CpG[2, 2]
+            if n1[i + 1] == 'T':
+                pplus = pplus * model_CpG[2, 3]
+        if n1[i] == 'T':
+            if n1[i + 1] == 'A':
+                pplus = pplus * model_CpG[3, 0]
+            if n1[i + 1] == 'C':
+                pplus = pplus * model_CpG[3, 1]
+            if n1[i + 1] == 'G':
+                pplus = pplus * model_CpG[3, 2]
+            if n1[i + 1] == 'T':
+                pplus = pplus * model_CpG[3, 3]
+
+    for i in range(0, 299):
+        if n1[i] == 'A':
+            if n1[i + 1] == 'A':
+                pminus = pminus * model_non_CpG[0, 0]
+            if n1[i + 1] == 'C':
+                pminus = pminus * model_non_CpG[0, 1]
+            if n1[i + 1] == 'G':
+                pminus = pminus * model_non_CpG[0, 2]
+            if n1[i + 1] == 'T':
+                pminus = pminus * model_non_CpG[0, 3]
+        if n1[i] == 'C':
+            if n1[i + 1] == 'A':
+                pminus = pminus * model_non_CpG[1, 0]
+            if n1[i + 1] == 'C':
+                pminus = pminus * model_non_CpG[1, 1]
+            if n1[i + 1] == 'G':
+                pminus = pminus * model_non_CpG[1, 2]
+            if n1[i + 1] == 'T':
+                pminus = pminus * model_non_CpG[1, 3]
+        if n1[i] == 'G':
+            if n1[i + 1] == 'A':
+                pminus = pminus * model_non_CpG[2, 0]
+            if n1[i + 1] == 'C':
+                pminus = pminus * model_non_CpG[2, 1]
+            if n1[i + 1] == 'G':
+                pminus = pminus * model_non_CpG[2, 2]
+            if n1[i + 1] == 'T':
+                pminus = pminus * model_non_CpG[2, 3]
+        if n1[i] == 'T':
+            if n1[i + 1] == 'A':
+                pminus = pminus * model_non_CpG[3, 0]
+            if n1[i + 1] == 'C':
+                pminus = pminus * model_non_CpG[3, 1]
+            if n1[i + 1] == 'G':
+                pminus = pminus * model_non_CpG[3, 2]
+            if n1[i + 1] == 'T':
+                pminus = pminus * model_non_CpG[3, 3]
+
+    x = pplus / pminus
+    n1ans = math.log(x, math.e)
+    print(n1ans)
+    if n1ans > 0:
+        cpg_list.append((n1ans, a))
+    elif len(cpg_list) == 0:
+        continue
+    elif n1ans < 0:
+        loc = sorted(cpg_list, reverse=True)
+        locations.append(loc[0])
+        cpg_list.clear()
+
+
+print(locations)
