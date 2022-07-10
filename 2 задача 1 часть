@@ -1,0 +1,120 @@
+import openpyxl
+
+wb = openpyxl.load_workbook('cpgIslandExt_chr1.xlsx')
+ws = wb["cpgIslandExt_chr1"]  # имя страницы
+locations_list = []
+true = True
+for row in ws.values:
+    if true:
+        true = False
+        continue  # это какой-то костыль
+    locations_list.append([int(row[1]), int(row[2])])
+print(locations_list)
+
+f = open('chr1.txt', 'r')
+chr1 = list(f.read())
+
+chr11 = []
+for i in chr1:
+    if i == '\n':
+        continue
+    else:
+        chr11.append(i)
+
+cpg_all = []
+for loc in locations_list:
+    cpg_all.append(chr11[loc[0]:loc[1]])
+
+cpg_plus = []
+for b in cpg_all:
+    for a in b:
+        cpg_plus.append(str(a).upper())
+
+a_a = 0
+a_c = 0
+a_g = 0
+a_t = 0
+c_a = 0
+c_c = 0
+c_g = 0
+c_t = 0
+g_a = 0
+g_c = 0
+g_g = 0
+g_t = 0
+t_a = 0
+t_c = 0
+t_g = 0
+t_t = 0
+
+for i in range((len(cpg_plus) - 1)):
+    if cpg_plus[i] == 'A':
+        if cpg_plus[i + 1] == 'A':
+            a_a += 1
+        if cpg_plus[i + 1] == 'C':
+            a_c += 1
+        if cpg_plus[i + 1] == 'G':
+            a_g += 1
+        if cpg_plus[i + 1] == 'T':
+            a_t += 1
+    if cpg_plus[i] == 'C':
+        if cpg_plus[i + 1] == 'A':
+            c_a += 1
+        if cpg_plus[i + 1] == 'C':
+            c_c += 1
+        if cpg_plus[i + 1] == 'G':
+            c_g += 1
+        if cpg_plus[i + 1] == 'T':
+            c_t += 1
+    if cpg_plus[i] == 'G':
+        if cpg_plus[i + 1] == 'A':
+            g_a += 1
+        if cpg_plus[i + 1] == 'C':
+            g_c += 1
+        if cpg_plus[i + 1] == 'G':
+            g_g += 1
+        if cpg_plus[i + 1] == 'T':
+            g_t += 1
+    if cpg_plus[i] == 'T':
+        if cpg_plus[i + 1] == 'A':
+            t_a += 1
+        if cpg_plus[i + 1] == 'C':
+            t_c += 1
+        if cpg_plus[i + 1] == 'G':
+            t_g += 1
+        if cpg_plus[i + 1] == 'T':
+            t_t += 1
+
+p_a_a = a_a / (a_t + a_c + a_g + a_a)
+p_a_c = a_c / (a_t + a_c + a_g + a_a)
+p_a_g = a_g / (a_t + a_c + a_g + a_a)
+p_a_t = a_t / (a_t + a_c + a_g + a_a)
+p_c_a = c_a / (c_t + c_c + c_g + c_a)
+p_c_c = c_c / (c_t + c_c + c_g + c_a)
+p_c_g = c_g / (c_t + c_c + c_g + c_a)
+p_c_t = c_t / (c_t + c_c + c_g + c_a)
+p_g_a = g_a / (g_t + g_c + g_g + g_a)
+p_g_c = g_c / (g_t + g_c + g_g + g_a)
+p_g_g = g_g / (g_t + g_c + g_g + g_a)
+p_g_t = g_t / (g_t + g_c + g_g + g_a)
+p_t_a = t_a / (t_t + t_c + t_g + t_a)
+p_t_c = t_c / (t_t + t_c + t_g + t_a)
+p_t_g = t_g / (t_t + t_c + t_g + t_a)
+p_t_t = t_t / (t_t + t_c + t_g + t_a)
+
+print(round(p_a_a, 3))
+print(round(p_a_c, 3))
+print(round(p_a_g, 3))
+print(round(p_a_t, 3))
+print(round(p_c_a, 3))
+print(round(p_c_c, 3))
+print(round(p_c_g, 3))
+print(round(p_c_t, 3))
+print(round(p_g_a, 3))
+print(round(p_g_c, 3))
+print(round(p_g_g, 3))
+print(round(p_g_t, 3))
+print(round(p_t_a, 3))
+print(round(p_t_c, 3))
+print(round(p_t_g, 3))
+print(round(p_t_t, 3))
